@@ -18,10 +18,10 @@ Console.WriteLine(mySecondInt / myInt);
 Console.WriteLine(mySecondInt + myInt);
 Console.WriteLine(myInt - mySecondInt);
 
-Console.WriteLine(5+5 * 10);
-Console.WriteLine((5+5) * 10);
+Console.WriteLine(5 + 5 * 10);
+Console.WriteLine((5 + 5) * 10);
 
-Console.WriteLine(Math.Pow(5,4));
+Console.WriteLine(Math.Pow(5, 4));
 Console.WriteLine(Math.Sqrt(25));
 
 string myString = "test";
@@ -42,3 +42,19 @@ string[] myStringArray = myString.Split(". ");
 Console.WriteLine(myStringArray[0]);
 Console.WriteLine(myStringArray[1]);
 Console.WriteLine(myStringArray[2]);
+
+Console.WriteLine(myInt.Equals(mySecondInt));
+Console.WriteLine(myInt.Equals(mySecondInt / 2));
+
+Console.WriteLine(myInt != mySecondInt);
+Console.WriteLine(myInt == mySecondInt / 2);
+
+Console.WriteLine(myInt >= mySecondInt);
+Console.WriteLine(myInt > mySecondInt);
+Console.WriteLine(myInt <= mySecondInt);
+Console.WriteLine(myInt < mySecondInt);
+
+Console.WriteLine(5 < 10 && 5 > 10);
+Console.WriteLine(5 < 10 || 5 > 10);
+
+
