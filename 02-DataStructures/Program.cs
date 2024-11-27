@@ -30,4 +30,11 @@ int[,] myMultiDimensionalArray = {
 Console.WriteLine(myMultiDimensionalArray[0, 0]);
 Console.WriteLine(myMultiDimensionalArray[2, 1]);
 
+Dictionary<string, int> groceryPrices = new Dictionary<string, int>();
+
+groceryPrices["Cheese"] = 5;
+groceryPrices["Milk"] = 10;
+
+Console.WriteLine(groceryPrices["Cheese"]);
+
 
