@@ -23,3 +23,22 @@ Console.WriteLine((5+5) * 10);
 
 Console.WriteLine(Math.Pow(5,4));
 Console.WriteLine(Math.Sqrt(25));
+
+string myString = "test";
+
+Console.WriteLine(myString);
+
+myString += ". second part";
+
+Console.WriteLine(myString);
+
+
+myString = myString + ". \"third\\ part";
+
+Console.WriteLine(myString);
+
+string[] myStringArray = myString.Split(". ");
+
+Console.WriteLine(myStringArray[0]);
+Console.WriteLine(myStringArray[1]);
+Console.WriteLine(myStringArray[2]);
