@@ -15,3 +15,12 @@ decimal mySecondDecimal = 0.75m;
 Console.WriteLine(myFloat - mySecondFloat);
 Console.WriteLine(myDouble - mySecondDouble);
 Console.WriteLine(myDecimal - mySecondDecimal);
+
+
+string myString = "Hello World";
+Console.WriteLine(myString);
+string myStringWithSymbols = "!@#$^12312312331dsadsadagsgsdggs½__)(/))";
+Console.WriteLine(myStringWithSymbols);
+
+bool myBool = true;
+Console.WriteLine(myBool);
