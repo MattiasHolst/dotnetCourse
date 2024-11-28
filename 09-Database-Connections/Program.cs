@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Globalization;
+using _09_Database_Connections.Data;
 using _09_Database_Connections.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -10,12 +11,10 @@ class Program
 {
     static void Main(string[] args)
     {
-        string connectionString = "Server=localhost\\SQLEXPRESS;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true";
-
-        IDbConnection dbConnection = new SqlConnection(connectionString);
+        DataContextDapper dapper = new();
 
         string sqlCommand = "SELECT GETDATE()";
-        DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
+        DateTime rightNow = dapper.LoadDataSingle<DateTime>(sqlCommand);
 
         Console.WriteLine(rightNow);
 
@@ -46,7 +45,8 @@ class Program
 
         Console.WriteLine(sql);
 
-        int result = dbConnection.Execute(sql);
+        //int result = dapper.ExecuteSqlWithRowCount(sql);
+        bool result = dapper.ExecuteSql(sql);
 
         Console.WriteLine(result);
 
@@ -60,7 +60,7 @@ class Program
             Computer.VideoCard 
         FROM TutorialAppSchema.Computer";
 
-        IEnumerable<Computer> computers = dbConnection.Query<Computer>(sqlSelect);
+        IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
 
         Console.WriteLine("'Motherboard','HasWifi','HasLTE','ReleaseDate','Price', 'VideoCard'");
         foreach (Computer computer in computers)
