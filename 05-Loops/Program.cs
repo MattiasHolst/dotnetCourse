@@ -30,3 +30,27 @@ foreach (int intForCompression in intsToCompress)
 }
 Console.WriteLine((DateTime.Now - startTime).TotalSeconds);
 Console.WriteLine(totalValue);
+
+int index = 0;
+totalValue = 0;
+startTime = DateTime.Now;
+while (index < intsToCompress.Length)
+{
+    totalValue += intsToCompress[index];
+    index++;
+}
+
+Console.WriteLine((DateTime.Now - startTime).TotalSeconds);
+Console.WriteLine(totalValue);
+
+index = 0;
+totalValue = 0;
+startTime = DateTime.Now;
+do
+{
+    totalValue += intsToCompress[index];
+    index++;
+} while (index < intsToCompress.Length);
+
+Console.WriteLine((DateTime.Now - startTime).TotalSeconds);
+Console.WriteLine(totalValue);
