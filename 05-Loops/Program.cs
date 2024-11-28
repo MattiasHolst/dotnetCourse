@@ -1,4 +1,6 @@
 ﻿
+using System.Globalization;
+
 int[] intsToCompress = [10, 15, 20, 25, 30, 12, 34];
 
 DateTime startTime = DateTime.Now;
@@ -53,4 +55,15 @@ do
 } while (index < intsToCompress.Length);
 
 Console.WriteLine((DateTime.Now - startTime).TotalSeconds);
+Console.WriteLine(totalValue);
+
+totalValue = 0;
+foreach (int intForCompression in intsToCompress)
+{
+    if (intForCompression > 20)
+    {
+
+        totalValue += intForCompression;
+    }
+}
 Console.WriteLine(totalValue);
