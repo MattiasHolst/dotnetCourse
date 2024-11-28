@@ -31,6 +31,7 @@ class Program
             CPUCores = 1,
             VideoCard = "RTX 2060"
         };
+        myComputer.HasWifi = false;
 
         Console.WriteLine(myComputer.Motherboard);
         Console.WriteLine(myComputer.HasWifi);
