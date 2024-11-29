@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
+using _10_Read_Write.Data;
 using _10_Read_Write.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace _10_Read_Write;
 
@@ -8,42 +10,36 @@ class Program
     static void Main(string[] args)
     {
 
-        Computer myComputer = new()
-        {
-            Motherboard = "Z690",
-            HasWifi = true,
-            HasLTE = false,
-            ReleaseDate = DateTime.Now,
-            Price = 943.87m,
-            VideoCard = "RTX 2060"
-        };
+        IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-        string sql = @$"INSERT INTO TutorialAppSchema.Computer (
-            Motherboard,
-            HasWifi,
-            HasLTE,
-            ReleaseDate,
-            Price,
-            VideoCard
-        ) VALUES (
-            '{myComputer.Motherboard}',
-            '{myComputer.HasWifi}',
-            '{myComputer.HasLTE}',
-            '{myComputer.ReleaseDate}',
-            '{myComputer.Price.ToString("0.00", CultureInfo.InvariantCulture)}',
-            '{myComputer.VideoCard}')";
+        DataContextDapper dapper = new DataContextDapper(config);
+
+        // string sql = @$"INSERT INTO TutorialAppSchema.Computer (
+        //     Motherboard,
+        //     HasWifi,
+        //     HasLTE,
+        //     ReleaseDate,
+        //     Price,
+        //     VideoCard
+        // ) VALUES (
+        //     '{myComputer.Motherboard}',
+        //     '{myComputer.HasWifi}',
+        //     '{myComputer.HasLTE}',
+        //     '{myComputer.ReleaseDate}',
+        //     '{myComputer.Price.ToString("0.00", CultureInfo.InvariantCulture)}',
+        //     '{myComputer.VideoCard}')";
 
         // File.WriteAllText("log.txt", "\n" + sql + "\n");
 
-        using StreamWriter openFile = new("log.txt", append: true);
+        // using StreamWriter openFile = new("log.txt", append: true);
 
-        openFile.WriteLine("\n" + sql + "\n");
+        // openFile.WriteLine("\n" + sql + "\n");
 
-        openFile.Close();
+        // openFile.Close();
 
-        string fileText = File.ReadAllText("log.txt");
+        string computersJson = File.ReadAllText("Computers.json");
 
-        Console.WriteLine(fileText);
+        Console.WriteLine(computersJson);
 
 
     }
