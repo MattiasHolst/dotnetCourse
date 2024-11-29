@@ -1,16 +1,19 @@
 using _09_Database_Connections.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace _09_Database_Connections.Data
 {
-    public class DataContextEF : DbContext
+    public class DataContextEF(IConfiguration config) : DbContext
     {
+        private IConfiguration _config = config;
+
         public DbSet<Computer>? Computer { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true",
+                optionsBuilder.UseSqlServer(_config.GetConnectionString("DefaultConnection"),
                 options => options.EnableRetryOnFailure());
             }
         }

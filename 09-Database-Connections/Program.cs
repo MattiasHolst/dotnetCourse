@@ -4,6 +4,8 @@ using _09_Database_Connections.Data;
 using _09_Database_Connections.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace _09_Database_Connections;
 
@@ -11,8 +13,9 @@ class Program
 {
     static void Main(string[] args)
     {
-        DataContextDapper dapper = new();
-        DataContextEF entityFramework = new();
+        IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+        DataContextDapper dapper = new(config);
+        DataContextEF entityFramework = new(config);
 
         string sqlCommand = "SELECT GETDATE()";
         DateTime rightNow = dapper.LoadDataSingle<DateTime>(sqlCommand);
