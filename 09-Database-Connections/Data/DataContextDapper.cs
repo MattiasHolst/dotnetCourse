@@ -1,5 +1,4 @@
 using System.Data;
-using _09_Database_Connections.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
