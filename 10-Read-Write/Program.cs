@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using _10_Read_Write.Data;
 using _10_Read_Write.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace _10_Read_Write;
 
@@ -39,7 +41,25 @@ class Program
 
         string computersJson = File.ReadAllText("Computers.json");
 
-        Console.WriteLine(computersJson);
+        // Console.WriteLine(computersJson);
+
+        // JsonSerializerOptions options = new()
+        // {
+        //     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        // };
+
+        // IEnumerable<Computer>? computers = JsonSerializer.Deserialize<IEnumerable<Computer>>(computersJson, options);
+        
+        IEnumerable<Computer>? computers = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJson);
+
+
+        if (computers != null)
+        {
+            foreach (Computer computer in computers)
+            {
+                Console.WriteLine(computer.Motherboard);
+            }
+        }
 
 
     }
