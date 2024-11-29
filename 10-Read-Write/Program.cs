@@ -29,7 +29,7 @@ class Program
 
         string computersJson = File.ReadAllText("ComputersSnake.json");
 
-        Mapper mapper = new(new MapperConfiguration((cfg) =>
+      /*   Mapper mapper = new(new MapperConfiguration((cfg) =>
         {
             cfg.CreateMap<ComputerSnake, Computer>()
             .ForMember(destination =>
@@ -56,22 +56,31 @@ class Program
             .ForMember(destination =>
             destination.Price, options =>
             options.MapFrom(source => source.price));
-        }));
+        })); */
 
         // Console.WriteLine(computersJson);
 
-        IEnumerable<ComputerSnake>? computersSystem = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<ComputerSnake>>(computersJson);
+        // IEnumerable<ComputerSnake>? computersSystem = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<ComputerSnake>>(computersJson);
+
+        // if (computersSystem != null)
+        // {
+        //     IEnumerable<Computer> computerResult = mapper.Map<IEnumerable<Computer>>(computersSystem);
+
+        //     foreach (Computer computer in computerResult)
+        //     {
+        //         Console.WriteLine(computer.Motherboard);
+        //     }
+        // }
+
+        IEnumerable<Computer>? computersSystem = System.Text.Json.JsonSerializer.Deserialize<IEnumerable<Computer>>(computersJson);
 
         if (computersSystem != null)
         {
-            IEnumerable<Computer> computerResult = mapper.Map<IEnumerable<Computer>>(computersSystem);
-
-            foreach (Computer computer in computerResult)
+            foreach (Computer computer in computersSystem)
             {
                 Console.WriteLine(computer.Motherboard);
             }
         }
-
 
         // IEnumerable<Computer>? computersNewtonsoft = JsonConvert.DeserializeObject<IEnumerable<Computer>>(computersJson);
 
