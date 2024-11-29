@@ -2,8 +2,15 @@
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Task firstTask = new(() =>
+        {
+            Thread.Sleep(100);
+            Console.WriteLine("Task 1");
+        });
+        firstTask.Start();
+        await firstTask;
+        Console.WriteLine("After the Task was created");
     }
 }
