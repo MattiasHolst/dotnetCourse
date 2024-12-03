@@ -1,4 +1,5 @@
 using DotnetAPI.Data;
+using DotnetAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetAPI.Controllers;
@@ -9,20 +10,35 @@ public class UserController(IConfiguration config) : ControllerBase
 {
     readonly DataContextDapper _dapper = new(config);
 
-    [HttpGet("TestConnection")]
-    public DateTime TestConnection()
+
+    [HttpGet("GetUsers")]
+    public IEnumerable<User> GetUsers()
     {
-        return _dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
+        string sql = @"
+            SELECT  [UserId]
+                , [FirstName]
+                , [LastName]
+                , [Email]
+                , [Gender]
+                , [Active]
+            FROM  TutorialAppSchema.Users;";
+        return _dapper.LoadData<User>(sql);
+
     }
 
-    [HttpGet("GetUsers/{testValue}")]
-    public string[] Test(string testValue)
+    [HttpGet("GetSingleUser/{userId}")]
+    public User GetSingleUser(int userId)
     {
-        string[] responseArray = [
-            "test1", "test2",testValue
-        ];
-        return responseArray;
-
+        string sql = @"
+            SELECT  [UserId]
+                , [FirstName]
+                , [LastName]
+                , [Email]
+                , [Gender]
+                , [Active]
+            FROM  TutorialAppSchema.Users
+                WHERE UserId = " + userId.ToString();
+        return _dapper.LoadDataSingle<User>(sql);
     }
 
 }
