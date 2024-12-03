@@ -83,4 +83,111 @@ public class UserEFController(IConfiguration config) : ControllerBase
         throw new Exception("Failed to get user");
     }
 
+    [HttpGet("GetUserSalary/{userId}")]
+    public UserSalary GetUserSalary(int userId)
+    {
+        UserSalary? userSalary = _entityFramework.UserSalary.Where(u => u.UserId == userId).FirstOrDefault();
+        if (userSalary != null)
+        {
+            return userSalary;
+        }
+        throw new Exception("Failed to get userSalary");
+    }
+
+    [HttpPut("EditUserSalary")]
+    public IActionResult EditUserSalary(UserSalary userSalary)
+    {
+        UserSalary? userSalaryDb = _entityFramework.UserSalary.Where(u => u.UserId == userSalary.UserId).FirstOrDefault();
+        if (userSalaryDb != null)
+        {
+            userSalaryDb.Salary = userSalary.Salary;
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+        }
+        throw new Exception("Failed to Update UserSalary");
+    }
+
+    [HttpPost("AddUserSalary")]
+    public IActionResult AddUserSalary(UserSalary userSalary)
+    {
+        _entityFramework.UserSalary.Add(userSalary);
+        if (_entityFramework.SaveChanges() > 0)
+        {
+            return Ok();
+        }
+        throw new Exception("Failed to Add UserSalary");
+    }
+
+
+    [HttpDelete("DeleteUserSalary/{userId}")]
+    public IActionResult DeleteUserSalary(int userId)
+    {
+        UserSalary? userSalaryDb = _entityFramework.UserSalary.Where(u => u.UserId == userId).FirstOrDefault();
+        if (userSalaryDb != null)
+        {
+            _entityFramework.UserSalary.Remove(userSalaryDb);
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+        }
+        throw new Exception("Failed to Delete User Salary");
+    }
+
+    [HttpGet("GetUserJobInfo/{userId}")]
+    public UserJobInfo GetUserJobInfo(int userId)
+    {
+        UserJobInfo? userJobInfo = _entityFramework.UserJobInfo.Where(u => u.UserId == userId).FirstOrDefault();
+        if (userJobInfo != null)
+        {
+            return userJobInfo;
+        }
+        throw new Exception("Failed to get User Job Info");
+    }
+
+    [HttpPut("EditUserJobInfo")]
+    public IActionResult EditUserJobInfo(UserJobInfo userJobInfo)
+    {
+        UserJobInfo? userJobInfoDb = _entityFramework.UserJobInfo.Where(u => u.UserId == userJobInfo.UserId).FirstOrDefault();
+        if (userJobInfoDb != null)
+        {
+            userJobInfoDb.JobTitle = userJobInfo.JobTitle;
+            userJobInfoDb.Department = userJobInfo.Department;
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+        }
+        throw new Exception("Failed to Update User Job Info");
+    }
+
+    [HttpPost("AddUserJobInfo")]
+    public IActionResult AddUserJobInfo(UserJobInfo userJobInfo)
+    {
+        _entityFramework.UserJobInfo.Add(userJobInfo);
+        if (_entityFramework.SaveChanges() > 0)
+        {
+            return Ok();
+        }
+        throw new Exception("Failed to Add User Job Info");
+    }
+
+
+    [HttpDelete("DeleteUserJobInfo/{userId}")]
+    public IActionResult DeleteUserJobInfo(int userId)
+    {
+        UserJobInfo? userJobInfoDb = _entityFramework.UserJobInfo.Where(u => u.UserId == userId).FirstOrDefault();
+        if (userJobInfoDb != null)
+        {
+            _entityFramework.UserJobInfo.Remove(userJobInfoDb);
+            if (_entityFramework.SaveChanges() > 0)
+            {
+                return Ok();
+            }
+        }
+        throw new Exception("Failed to Delete User Job Info");
+    }
+
 }
