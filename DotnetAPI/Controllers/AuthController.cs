@@ -6,6 +6,7 @@ using System.Text;
 using DotnetAPI.Data;
 using DotnetAPI.Dtos;
 using DotnetAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -13,11 +14,15 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DotnetAPI.Controllers
 {
+    [Authorize]
+    [ApiController]
+    [Route("[controller]")]
     public class AuthController(IConfiguration config) : ControllerBase
     {
         private readonly DataContextDapper _dapper = new(config);
         private readonly IConfiguration _config = config;
 
+        [AllowAnonymous]
         [HttpPost("Register")]
         public IActionResult Register(UserForRegistrationDto userForRegistration)
         {
@@ -81,6 +86,7 @@ namespace DotnetAPI.Controllers
             }
             throw new Exception("Passwords do not match");
         }
+        [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login(UserForLoginDto userForLogin)
         {
@@ -112,6 +118,21 @@ namespace DotnetAPI.Controllers
                 });
         }
 
+        [HttpGet("RefreshToken")]
+        public IActionResult RefreshToken()
+        {
+            string userId = User.FindFirst("userId")?.Value + "";
+
+            string userIdSql = "SELECT UserId FROM TutorialAppSchema.Users where UserId= "
+            + userId;
+
+            int userIdFromDB = _dapper.LoadDataSingle<int>(userIdSql);
+
+            return Ok(new Dictionary<string, string> {
+                {"token", CreateToken(userIdFromDB)}
+                });
+        }
+
         private byte[] GetPasswordHash(byte[] passwordSalt, string password)
         {
             string passwordSaltPlusString = _config.GetSection("AppSettings:PasswordKey").Value +
@@ -134,7 +155,7 @@ namespace DotnetAPI.Controllers
                 new Claim("userId", userId.ToString())
             ];
             string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
- 
+
             SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(
                         tokenKeyString ?? ""
