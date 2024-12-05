@@ -78,6 +78,24 @@ namespace DotnetAPI.Controllers
             return _dapper.LoadData<Post>(sql);
         }
 
+        [HttpGet("PostsBySearch/{searchParam}")]
+        public IEnumerable<Post> PostsBySearch(string searchParam)
+        {
+            string sql = @"
+            SELECT  
+                [PostId],
+                [UserId],
+                [PostTitle],
+                [PostContent],
+                [PostCreated],
+                [PostUpdated]
+            FROM  TutorialAppSchema.Posts
+                WHERE PostTitle LIKE '%" + searchParam + @"%' 
+                    OR PostContent LIKE '%" + searchParam + "%'";
+
+            return _dapper.LoadData<Post>(sql);
+        }
+
         [HttpPost("Post")]
         public IActionResult AddPost(PostToAddDto post)
         {
@@ -118,7 +136,7 @@ namespace DotnetAPI.Controllers
         public IActionResult DeletePost(int postId)
         {
             string sql = @"DELETE FROM TutorialAppSchema.Posts 
-            WHERE PostId = " + postId.ToString() + 
+            WHERE PostId = " + postId.ToString() +
             " AND UserId = " + User.FindFirst("userId")?.Value;
 
             if (_dapper.ExecuteSql(sql)) return Ok();
