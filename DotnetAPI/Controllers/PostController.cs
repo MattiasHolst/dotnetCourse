@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetAPI.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PostController(IConfiguration config) : ControllerBase
@@ -14,7 +14,7 @@ namespace DotnetAPI.Controllers
         private readonly DataContextDapper _dapper = new(config);
 
         [HttpGet("Posts/{postId}/{userId}/{searchParam}")]
-        public IEnumerable<Post> GetPosts(int postId, int userId, string searchParam = "None")
+        public IEnumerable<Post> GetPosts(int postId = 0, int userId = 0, string searchParam = "None")
         {
             string sql = @"EXEC TutorialAppSchema.spPosts_Get";
             string parameters = "";
@@ -42,16 +42,7 @@ namespace DotnetAPI.Controllers
         [HttpGet("GetMyPosts")]
         public IEnumerable<Post> GetMyPosts()
         {
-            string sql = @"
-            SELECT  
-                [PostId],
-                [UserId],
-                [PostTitle],
-                [PostContent],
-                [PostCreated],
-                [PostUpdated]
-            FROM  TutorialAppSchema.Posts
-                WHERE UserId = " + User.FindFirst("userId")?.Value;
+            string sql = "EXEC TutorialAppSchema.spPosts_Get @UserId=" + User.FindFirst("userId")?.Value;
 
             return _dapper.LoadData<Post>(sql);
         }
