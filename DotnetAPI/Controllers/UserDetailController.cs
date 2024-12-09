@@ -57,37 +57,9 @@ public class UserDetailController(IConfiguration config) : ControllerBase
     [HttpDelete("DeleteUser/{userId}")]
     public IActionResult DeleteUser(int userId)
     {
-        string sql = @"
-            DELETE FROM TutorialAppSchema.Users
-                WHERE UserId = " + userId.ToString();
-
+        string sql = "EXEC TutorialAppSchema.spUser_Delete @UserId = " + userId.ToString();
         if (_dapper.ExecuteSql(sql)) return Ok();
 
         throw new Exception("Failed to Delete User");
     }
-
-    [HttpDelete("DeleteUserSalary/{userId}")]
-    public IActionResult DeleteUserSalary(int userId)
-    {
-        string sql = @"
-            DELETE FROM TutorialAppSchema.UserSalary
-                WHERE UserId = " + userId.ToString();
-
-        if (_dapper.ExecuteSql(sql)) return Ok();
-
-        throw new Exception("Failed to Delete UserSalary");
-    }
-
-    [HttpDelete("DeleteUserJobInfo/{userId}")]
-    public IActionResult DeleteUserJobInfo(int userId)
-    {
-        string sql = @"
-            DELETE FROM TutorialAppSchema.UserJobInfo
-                WHERE UserId = " + userId.ToString();
-
-        if (_dapper.ExecuteSql(sql)) return Ok();
-
-        throw new Exception("Failed to Delete UserJobInfo");
-    }
-
 }
