@@ -22,3 +22,40 @@ BEGIN
                 OR Posts.PostContent LIKE '%' + @SearchValue + '%'
                 OR Posts.PostTitle LIKE '%' + @SearchValue + '%')
 END
+
+
+USE DotNetCourseDatabase
+GO
+
+CREATE PROCEDURE TutorialAppSchema.spPosts_Upsert
+    @UserId INT
+    , @PostId INT = NULL
+    , @PostTitle NVARCHAR(255)
+    , @PostContent NVARCHAR(MAX)
+AS
+BEGIN
+    IF NOT EXISTS (SELECT * FROM TutorialAppSchema.Posts WHERE PostId = @PostId)
+        BEGIN
+            INSERT INTO TutorialAppSchema.Posts(
+                UserId,
+                PostTitle,
+                PostContent,
+                PostCreated,
+                PostUpdated
+            ) VALUES (
+                @UserId,
+                @PostTitle,
+                @PostContent,
+                GETDATE(),
+                GETDATE()
+            )
+        END
+    ELSE
+        BEGIN
+            UPDATE TutorialAppSchema.Posts
+                SET PostTitle = @PostTitle,
+                    PostContent = @PostContent,
+                    PostUpdated = GETDATE()
+                WHERE PostId = @PostId
+        END
+END
