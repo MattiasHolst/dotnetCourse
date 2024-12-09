@@ -53,7 +53,7 @@ BEGIN
         --         GROUP BY UserJobInfo2.Department
         -- ) AS AvgSalary
     WHERE [Users].[UserId] = ISNULL(@UserId, Users.UserId)
-        AND ISNULL(Users.Active, 0) = COALESCE(Active, Users.Active, 0)
+        AND ISNULL(Users.Active, 0) = COALESCE(@Active, Users.Active, 0)
 END
 
 
