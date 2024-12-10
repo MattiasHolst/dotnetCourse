@@ -2,16 +2,20 @@ using System.Data;
 using Dapper;
 using DotnetAPI.Data;
 using DotnetAPI.Dtos;
+using DotnetAPI.Helpers;
 using DotnetAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class UserDetailController(IConfiguration config) : ControllerBase
 {
     readonly DataContextDapper _dapper = new(config);
+    readonly ReusableSql _reusableSql = new(config);
 
 
     [HttpGet("GetUsers/{userId}/{isActive}")]
@@ -43,30 +47,7 @@ public class UserDetailController(IConfiguration config) : ControllerBase
     [HttpPut("UpsertUser")]
     public IActionResult UpsertUser(UserDetail userDetail)
     {
-        string sql = @"EXEC TutorialAppSchema.spUser_Upsert
-                @FirstName = @FirstNameParameter, 
-                @LastName = @LastNameParameter, 
-                @Email = @EmailParameter, 
-                @Gender = @GenderParameter, 
-                @Active = @ActiveParameter, 
-                @JobTitle = @JobTitleParameter, 
-                @Department = @DepartmentParameter, 
-                @Salary = @SalaryParameter, 
-                @UserId = @UserIdParameter";
-
-        DynamicParameters sqlParameters = new();
-        sqlParameters.Add("@FirstNameParameter", userDetail.FirstName, DbType.String);
-        sqlParameters.Add("@LastNameParameter", userDetail.LastName, DbType.String);
-        sqlParameters.Add("@EmailParameter", userDetail.Email, DbType.String);
-        sqlParameters.Add("@GenderParameter", userDetail.Gender, DbType.String);
-        sqlParameters.Add("@ActiveParameter", userDetail.Active, DbType.Boolean);
-        sqlParameters.Add("@JobTitleParameter", userDetail.JobTitle, DbType.String);
-        sqlParameters.Add("@DepartmentParameter", userDetail.Department, DbType.String);
-        sqlParameters.Add("@SalaryParameter", userDetail.Salary, DbType.Decimal);
-        sqlParameters.Add("@UserIdParameter", userDetail.UserId, DbType.Int32);
-
-
-        if (_dapper.ExecuteSqlWithParameters(sql, sqlParameters)) return Ok();
+        if (_reusableSql.UpsertUser(userDetail)) return Ok();
         throw new Exception("Failed to Update User");
     }
 

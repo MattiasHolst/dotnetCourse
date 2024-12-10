@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using AutoMapper;
 using Dapper;
 using DotnetAPI.Data;
 using DotnetAPI.Dtos;
@@ -24,6 +25,12 @@ namespace DotnetAPI.Controllers
         private readonly DataContextDapper _dapper = new(config);
         private readonly AuthHelper _authHelper = new(config);
 
+        private readonly ReusableSql _reusableSql = new(config);
+        private readonly IMapper _mapper = new Mapper(new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<UserForRegistrationDto, UserDetail>();
+        }));
+
         [AllowAnonymous]
         [HttpPost("Register")]
         public IActionResult Register(UserForRegistrationDto userForRegistration)
@@ -40,16 +47,9 @@ namespace DotnetAPI.Controllers
                     UserForLoginDto userForSetPassword = new() { Email = userForRegistration.Email, Password = userForRegistration.Password };
                     if (_authHelper.SetPassword(userForSetPassword))
                     {
-                        string sqlAddUser = @"EXEC TutorialAppSchema.spUser_Upsert
-                        @FirstName = '" + userForRegistration.FirstName +
-                        "', @LastName = '" + userForRegistration.LastName +
-                        "', @Email = '" + userForRegistration.Email +
-                        "', @Gender = '" + userForRegistration.Gender +
-                        "', @Active = 1" +
-                        ", @JobTitle = '" + userForRegistration.JobTitle +
-                        "', @Department = '" + userForRegistration.Department +
-                        "', @Salary = '" + userForRegistration.Salary + "'";
-                        if (_dapper.ExecuteSql(sqlAddUser)) return Ok();
+                        UserDetail userDetail = _mapper.Map<UserDetail>(userForRegistration);
+                        userDetail.Active = true;
+                        if (_reusableSql.UpsertUser(userDetail)) return Ok();
                         throw new Exception("Failed to add user");
                     }
                     throw new Exception("Failed to Register user");
